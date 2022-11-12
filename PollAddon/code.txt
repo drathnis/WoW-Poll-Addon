@@ -1,0 +1,96 @@
+PollAddon = LibStub("AceAddon-3.0"):NewAddon("PollAddon", "AceConsole-3.0", "AceEvent-3.0")
+local AC = LibStub("AceConfig-3.0")
+local ACD = LibStub("AceConfigDialog-3.0")
+local AceConfig = LibStub("AceConfig-3.0")
+
+local defaults = {
+	profile = {
+		message = "Welcome Home!",
+		showOnScreen = true,
+	},
+}
+
+local optionsMenu = {
+	name = "PollAddon",
+	handler = PollAddon,
+	type = "group",
+	args = {
+		msg = {
+			type = "input",
+			name = "Message",
+			desc = "The message to be displayed when you get home.",
+			usage = "<Your message>",
+			get = "GetMessage",
+			set = "SetMessage",
+		},
+		showOnScreen = {
+			type = "toggle",
+			name = "Show on Screen",
+			desc = "Toggles the display of the message on the screen.",
+			get = "IsShowOnScreen",
+			set = "ToggleShowOnScreen"
+		},
+	},
+}
+
+
+local mainFrame = {
+	name = "PollAddon",
+	handler = PollAddon,
+	type = "group",
+	args = {
+		msg = {
+			type = "input",
+			name = "Message",
+			desc = "The message to be displayed when you get home.",
+			usage = "<Your message>",
+			get = "GetMessage",
+			set = "SetMessage",
+		},
+		showOnScreen = {
+			type = "toggle",
+			name = "Show on Screen",
+			desc = "Toggles the display of the message on the screen.",
+			get = "IsShowOnScreen",
+			set = "ToggleShowOnScreen"
+		},
+	},
+}
+
+function PollAddon:OnInitialize()
+	self.db = LibStub("AceDB-3.0"):New("PollAddonDB", defaults, true)
+	AC:RegisterOptionsTable("PollAddon_options", optionsMenu)
+	self.optionsFrame = ACD:AddToBlizOptions("PollAddon_options", "PollAddon")
+
+	local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+	AC:RegisterOptionsTable("PollAddon_Profiles", profiles)
+	ACD:AddToBlizOptions("PollAddon_Profiles", "Profiles", "PollAddon")
+
+end
+
+
+
+
+
+function PollAddon:OnEnable()
+	
+end
+
+
+function PollAddon:GetMessage(info)
+	return self.db.profile.message
+end
+
+function PollAddon:SetMessage(info, value)
+	self.db.profile.message = value
+end
+
+function PollAddon:IsShowOnScreen(info)
+	return self.db.profile.showOnScreen
+end
+
+function PollAddon:ToggleShowOnScreen(info, value)
+	self.db.profile.showOnScreen = value
+end
+
+
